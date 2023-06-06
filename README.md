@@ -8,7 +8,7 @@ package as well as a job that will extract the package to
 #### Trusted certificates
 
 Trusted certs can be installed in the rootfs by setting the
-`cflinuxfs4-compat-rootfs.trusted_certs` property to the certificate chain in any
+`cflinuxfs4-rootfs.trusted_certs` property to the certificate chain in any
 order. For example in your deployment manifest:
 
 ```
