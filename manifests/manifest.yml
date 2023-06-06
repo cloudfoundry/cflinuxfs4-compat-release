@@ -6,7 +6,7 @@ update:
   max_in_flight: 1
   update_watch_time: 5000-120000
 instance_groups:
-  - name: cflinuxfs4-compat-smoke-test
+  - name: cflinuxfs4-smoke-test
     lifecycle: errand
     azs: [z1]
     instances: 1
@@ -17,10 +17,10 @@ instance_groups:
     networks:
     - name: default
     jobs:
-    - name: cflinuxfs4-compat-smoke-test
+    - name: cflinuxfs4-smoke-test
       release: cflinuxfs4-compat
       properties:
-        cflinuxfs4-compat-rootfs:
+        cflinuxfs4-rootfs:
           trusted_certs: |+
             -----BEGIN CERTIFICATE-----
             MIIFATCCAuugAwIBAgIBATALBgkqhkiG9w0BAQswEjEQMA4GA1UEAxMHZGllZ29D
@@ -51,10 +51,10 @@ instance_groups:
             r5EejEQP82achV3em5+macfNfEIILruStanw9D+kR1GYlE07wMTTmkZ39x3HMicf
             r4ERoMvnaSaiGVHIiCi9ZsoNLlf6TBNNfaqpc8jDZa2/o/nM+Q==
             -----END CERTIFICATE-----
-    - name: cflinuxfs4-compat-rootfs-setup
+    - name: cflinuxfs4-rootfs-setup
       release: cflinuxfs4-compat
       properties:
-        cflinuxfs4-compat-rootfs:
+        cflinuxfs4-rootfs:
           trusted_certs: |+
             -----BEGIN CERTIFICATE-----
             MIIFATCCAuugAwIBAgIBATALBgkqhkiG9w0BAQswEjEQMA4GA1UEAxMHZGllZ29D

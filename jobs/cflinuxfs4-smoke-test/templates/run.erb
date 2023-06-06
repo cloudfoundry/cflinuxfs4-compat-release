@@ -2,10 +2,10 @@
 
 set -ex
 
-CERTS_PROPERTY=$(cat /var/vcap/jobs/cflinuxfs4-compat-smoke-test/config/certs/trusted_ca.crt)
+CERTS_PROPERTY=$(cat /var/vcap/jobs/cflinuxfs4-smoke-test/config/certs/trusted_ca.crt)
 CERTS_PROPERTY_COUNT=$(echo $CERTS_PROPERTY | grep "BEGIN CERTIFICATE" | wc -l)
 
-ROOTFS_TAR=/var/vcap/packages/cflinuxfs4-compat/rootfs.tar
+ROOTFS_TAR=/var/vcap/packages/cflinuxfs4/rootfs.tar
 ROOTFS_TMP=/tmp/rootfs
 mkdir -p "$ROOTFS_TMP"
 tar -C "$ROOTFS_TMP" -xf "$ROOTFS_TAR" .

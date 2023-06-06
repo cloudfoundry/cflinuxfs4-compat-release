@@ -1,0 +1,4 @@
+---
+name: cflinuxfs4
+files:
+- rootfs/cflinuxfs4-*.tar.gz

@@ -1,4 +1,0 @@
----
-name: cflinuxfs4-compat
-files:
-- rootfs/cflinuxfs4-compat-*.tar.gz

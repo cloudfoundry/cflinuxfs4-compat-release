@@ -1,8 +1,8 @@
 #!/bin/bash -ex
 # vim: set ft=sh
 
-CONF_DIR=/var/vcap/jobs/cflinuxfs4-compat-rootfs-setup/config
-ROOTFS_PACKAGE=/var/vcap/packages/cflinuxfs4-compat
+CONF_DIR=/var/vcap/jobs/cflinuxfs4-rootfs-setup/config
+ROOTFS_PACKAGE=/var/vcap/packages/cflinuxfs4
 ROOTFS_DIR=$ROOTFS_PACKAGE/rootfs
 ROOTFS_TAR=$ROOTFS_PACKAGE/rootfs.tar
 TRUSTED_CERT_FILE=$CONF_DIR/certs/trusted_ca.crt
@@ -10,7 +10,7 @@ CA_DIR=$ROOTFS_DIR/usr/local/share/ca-certificates/
 
 if [ ! -d $ROOTFS_DIR ]; then
   mkdir -p $ROOTFS_DIR
-  tar -pzxf $ROOTFS_PACKAGE/cflinuxfs4-compat.tar.gz -C $ROOTFS_DIR
+  tar -pzxf $ROOTFS_PACKAGE/cflinuxfs4.tar.gz -C $ROOTFS_DIR
 fi
 
 if grep -q "trusted_ca_certificates" $TRUSTED_CERT_FILE; then
@@ -21,7 +21,7 @@ fi
 
 rm -f $ROOTFS_DIR/usr/local/share/ca-certificates/*
 mkdir -p $CA_DIR
-/var/vcap/packages/rootfs-certsplitter-cflinuxfs4-compat/bin/certsplitter $TRUSTED_CERT_FILE $CA_DIR
+/var/vcap/packages/rootfs-certsplitter-cflinuxfs4/bin/certsplitter $TRUSTED_CERT_FILE $CA_DIR
 chmod 0644 $CA_DIR/*
 
 # have to set TMPDIR so we can mktemp inside the chrooted subshell

@@ -14,7 +14,7 @@ pushd code.cloudfoundry.org/certsplitter
   go install -buildvcs=false code.cloudfoundry.org/certsplitter/cmd/certsplitter
 popd
 
-if [ ! -f "/var/vcap/packages/rootfs-certsplitter-cflinuxfs4-compat/bin/certsplitter" ]; then
+if [ ! -f "/var/vcap/packages/rootfs-certsplitter-cflinuxfs4/bin/certsplitter" ]; then
   echo "certsplitter install failed"
   exit 1
 fi
