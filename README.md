@@ -13,7 +13,7 @@ order. For example in your deployment manifest:
 
 ```
 properties:
-  cflinuxfs4-compat-rootfs:
+  cflinuxfs4-rootfs:
     trusted_certs: |+
       -----BEGIN CERTIFICATE-----
       MIIDQjCCAiqgAwIBAgIJAP/z/IO9Vh6HMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
