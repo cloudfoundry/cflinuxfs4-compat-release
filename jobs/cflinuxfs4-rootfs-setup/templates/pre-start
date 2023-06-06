@@ -1,0 +1,50 @@
+#!/bin/bash -ex
+# vim: set ft=sh
+
+CONF_DIR=/var/vcap/jobs/cflinuxfs4-compat-rootfs-setup/config
+ROOTFS_PACKAGE=/var/vcap/packages/cflinuxfs4-compat
+ROOTFS_DIR=$ROOTFS_PACKAGE/rootfs
+ROOTFS_TAR=$ROOTFS_PACKAGE/rootfs.tar
+TRUSTED_CERT_FILE=$CONF_DIR/certs/trusted_ca.crt
+CA_DIR=$ROOTFS_DIR/usr/local/share/ca-certificates/
+
+if [ ! -d $ROOTFS_DIR ]; then
+  mkdir -p $ROOTFS_DIR
+  tar -pzxf $ROOTFS_PACKAGE/cflinuxfs4-compat.tar.gz -C $ROOTFS_DIR
+fi
+
+if grep -q "trusted_ca_certificates" $TRUSTED_CERT_FILE; then
+  JSON_CERT_FILE=$CONF_DIR/certs/trusted_ca.json
+  cp $TRUSTED_CERT_FILE $JSON_CERT_FILE
+  TRUSTED_CERT_FILE=$JSON_CERT_FILE
+fi
+
+rm -f $ROOTFS_DIR/usr/local/share/ca-certificates/*
+mkdir -p $CA_DIR
+/var/vcap/packages/rootfs-certsplitter-cflinuxfs4-compat/bin/certsplitter $TRUSTED_CERT_FILE $CA_DIR
+chmod 0644 $CA_DIR/*
+
+# have to set TMPDIR so we can mktemp inside the chrooted subshell
+updated_certs=1
+retry_count=0
+max_retry_count=3
+
+set +e
+until [ $updated_certs -eq 0 ] || [ $retry_count -ge $max_retry_count ]; do
+  echo "trying to run update-ca-certificates..."
+  TMPDIR=/tmp timeout --signal=KILL 60s chroot $ROOTFS_DIR /usr/sbin/update-ca-certificates -f
+  updated_certs=$?
+  retry_count=$((retry_count + 1))
+done
+set -e
+
+if [ $updated_certs -ne 0 ]; then
+  echo "failed to setup ca certificates"
+  exit 1
+fi
+
+# change modification time to invalidate garden's image cache
+touch $ROOTFS_DIR
+
+tar -C $ROOTFS_DIR -cf $ROOTFS_TAR .
+rm -rf $ROOTFS_DIR

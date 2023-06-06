@@ -1,0 +1,17 @@
+---
+name: cflinuxfs4-compat-smoke-test
+
+templates:
+  run.erb: bin/run
+  trusted_ca.crt.erb: config/certs/trusted_ca.crt
+
+properties:
+  cflinuxfs4-compat-rootfs.trusted_certs:
+    description: "Concatenation of PEM-encoded CA certficates to add to the rootfs trust store."
+    example: |
+      -----BEGIN CERTIFICATE-----
+      (contents of certificate #1)
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      (contents of certificate #2)
+      -----END CERTIFICATE-----

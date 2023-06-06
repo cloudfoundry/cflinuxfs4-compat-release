@@ -1,0 +1,21 @@
+---
+name: cflinuxfs4-compat-rootfs-setup
+
+templates:
+  pre-start: bin/pre-start
+  trusted_ca.crt.erb: config/certs/trusted_ca.crt
+
+packages:
+  - cflinuxfs4-compat
+  - rootfs-certsplitter-cflinuxfs4-compat
+
+properties:
+  cflinuxfs4-compat-rootfs.trusted_certs:
+    description: "Array or concatenation of PEM-encoded CA certficates to add to the rootfs trust store."
+    example: |
+      -----BEGIN CERTIFICATE-----
+      (contents of certificate #1)
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      (contents of certificate #2)
+      -----END CERTIFICATE-----

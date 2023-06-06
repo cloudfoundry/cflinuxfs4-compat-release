@@ -1,0 +1,15 @@
+<%=
+cert_string = ""
+
+if_p("cflinuxfs4-compat-rootfs.trusted_certs") do |value|
+  if value.kind_of?(Array)
+    cert_string = { trusted_ca_certificates: value }.to_json
+  elsif value.kind_of?(String)
+    cert_string = value
+  else
+    raise("The 'cflinuxfs4-compat-rootfs.trusted_certs' property must be a string or an array")
+  end
+end
+
+cert_string
+%>
