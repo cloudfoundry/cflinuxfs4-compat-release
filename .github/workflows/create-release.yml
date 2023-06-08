@@ -77,16 +77,19 @@ jobs:
       uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
       with:
         message: "Final cflinuxfs4-compat bosh release version ${{ needs.create.outputs.version }}, containing cflinuxfs-compat version ${{ needs.create.outputs.version }}"
-        pathspec: ".$GITHUB_WORKSPACE/final_builds $GITHUB_WORKSPACE/releases/**/*-${{ needs.create.outputs.version }}.yml $GITHUB_WORKSPACE/releases/**/index.yml"
+        pathspec: ".$GITHUB_WORKSPACE/.final_builds $GITHUB_WORKSPACE/releases/**/*-${{ needs.create.outputs.version }}.yml $GITHUB_WORKSPACE/releases/**/index.yml"
         # TODO
         keyid: ${{ secrets.CF_BOT_GPG_SIGNING_KEY_ID }}
         key: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
+
+    - name: Check Status
+      run: git status
 
     - name: Git push
       if: ${{ steps.commit.outputs.commit_sha != '' }}
       uses: paketo-buildpacks/github-config/actions/pull-request/push-branch@main
       with:
-        branch: "automation/release"
+        branch: "main"
 
     - name: Open Pull Request
       if: ${{ steps.commit.outputs.commit_sha != '' }}
