@@ -71,7 +71,7 @@ jobs:
         blob-name: rootfs
 
     - name: Git commit blobs.yml
-      id: commit
+      id: commit-1
       uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
       with:
         message: "Updating blobs for cflinuxfs4-compat bosh release version ${{ needs.create.outputs.version }}"
@@ -81,7 +81,7 @@ jobs:
         key: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
 
     - name: Git commit
-      id: commit
+      id: commit-2
       uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
       with:
         message: "Final cflinuxfs4-compat bosh release version ${{ needs.create.outputs.version }}, containing cflinuxfs-compat version ${{ needs.create.outputs.version }}"
