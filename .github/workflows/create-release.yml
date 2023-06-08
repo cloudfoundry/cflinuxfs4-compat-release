@@ -18,6 +18,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      submodules: true
 
     - name: Receive Repository Dispatch
       id: repo-dispatch
