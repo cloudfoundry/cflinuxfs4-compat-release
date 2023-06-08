@@ -18,6 +18,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
     - name: Receive Repository Dispatch
       id: repo-dispatch
       run: |
@@ -26,6 +27,7 @@ jobs:
           version="${{ github.event.inputs.version }}"
         fi
         echo "version=${version}" >> "$GITHUB_OUTPUT"
+
     - name: Checkout cflinuxfs4
       uses: actions/checkout@v3
       with:
@@ -33,6 +35,7 @@ jobs:
         # TODO - set this to main
         ref: 512135a03239cbdbf22eb6852f1d85490a3597da
         path: cflinuxfs4
+
     - name: Create stack
       id: create-stack
       env:
@@ -44,20 +47,7 @@ jobs:
           echo "Making compat stack"
           make compat version=${{ steps.repo-dispatch.outputs.version }}
         popd
-    - name: Upload `${{ steps.retrieve.outputs.metadata-filepath }}`
-      uses: actions/upload-artifact@v3
-      with:
-        name: cflinuxfs-compat.tar.gz
-        path: cflinuxfs4/cflinuxfs4.x86_64-compat.tar.gz
 
-  release:
-    name: Create release
-    needs:
-      - create
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
     - name: BOSH release creation
       id: bosh-release
       # TODO change this to main
@@ -67,7 +57,7 @@ jobs:
         access-key-id: ${{ secrets.CF_S3_ACCESS_KEY }}
         secret-access-key: ${{ secrets.CF_S3_SECRET_ACCESS_KEY }}
         release-name: cflinuxfs4-compat
-        blob-glob: cflinuxfs4-*.tar.gz
+        blob-glob: cflinuxfs4/cflinuxfs4-*.tar.gz
         blob-name: rootfs
 
     - name: Git commit blobs.yml
