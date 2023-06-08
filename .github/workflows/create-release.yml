@@ -33,7 +33,7 @@ jobs:
       with:
         repository: cloudfoundry/cflinuxfs4
         # TODO - set this to main
-        ref: 512135a03239cbdbf22eb6852f1d85490a3597da
+        ref: c4126e9cc86d660c6444c3eb50149e3cfdc1eb8f
         path: cflinuxfs4
 
     - name: Create stack
