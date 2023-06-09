@@ -1,0 +1,101 @@
+name: Create cflinuxfs4-compat stack release
+
+on:
+  repository_dispatch:
+    types: [release-dispatch]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of the cflinuxfs4 stack release a compat stack of (e.g. 1.2.3)'
+        required: true
+
+jobs:
+  create:
+    name: Create Compat Stack
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.repo-dispatch.outputs.version }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Receive Repository Dispatch
+      id: repo-dispatch
+      run: |
+        version="${{ github.event.client_payload.version }}"
+        if [ -z "${version}" ]; then
+          version="${{ github.event.inputs.version }}"
+        fi
+        echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+    - name: Checkout cflinuxfs4
+      uses: actions/checkout@v3
+      with:
+        repository: cloudfoundry/cflinuxfs4
+        # TODO - set this to main
+        ref: c4126e9cc86d660c6444c3eb50149e3cfdc1eb8f
+        path: cflinuxfs4
+
+    - name: Create stack
+      id: create-stack
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.CF_DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.CF_DOCKERHUB_PASSWORD }}
+      run: |
+        pushd $GITHUB_WORKSPACE/cflinuxfs4
+          echo "${DOCKERHUB_PASSWORD}" | sudo skopeo login --username "${DOCKERHUB_USERNAME}" --password-stdin index.docker.io
+          echo "Making compat stack"
+          make compat version=${{ steps.repo-dispatch.outputs.version }}
+        popd
+
+    - name: BOSH release creation
+      id: bosh-release
+      # TODO change this to main
+      uses: cloudfoundry/buildpacks-github-config/actions/stack/create-release@bosh-release
+      with:
+        version: ${{ steps.repo-dispatch.outputs.version }}
+        access-key-id: ${{ secrets.CF_S3_ACCESS_KEY }}
+        secret-access-key: ${{ secrets.CF_S3_SECRET_ACCESS_KEY }}
+        release-name: cflinuxfs4-compat
+        blob-glob: cflinuxfs4/cflinuxfs4-*.tar.gz
+        blob-name: rootfs
+
+    - name: Git commit blobs.yml
+      id: commit-1
+      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
+      with:
+        message: "Updating blobs for cflinuxfs4-compat bosh release version ${{ steps.repo-dispatch.outputs.version }}"
+        pathspec: "config/blobs.yml"
+        # TODO
+        keyid: ${{ secrets.CF_BOT_GPG_SIGNING_KEY_ID }}
+        key: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
+
+    - name: Git commit
+      id: commit-2
+      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
+      with:
+        message: "Final cflinuxfs4-compat bosh release version ${{ steps.repo-dispatch.outputs.version }}, containing cflinuxfs-compat version ${{ steps.repo-dispatch.outputs.version }}"
+        pathspec: ".final_builds releases/**/*-${{ steps.repo-dispatch.outputs.version }}.yml releases/**/index.yml"
+        # TODO
+        keyid: ${{ secrets.CF_BOT_GPG_SIGNING_KEY_ID }}
+        key: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
+
+    - name: Git push
+      if: ${{ steps.commit-1.outputs.commit_sha != '' || steps.commit-2.outputs.commit_sha != '' }}
+      uses: paketo-buildpacks/github-config/actions/pull-request/push-branch@main
+      with:
+        branch: "main"
+
+    - name: Create Release
+      uses: paketo-buildpacks/github-config/actions/release/create@main
+      with:
+        repo: ${{ github.repository }}
+        token: ${{ secrets.CF_BOT_GH_TOKEN }}
+        tag_name: ${{ steps.repo-dispatch.outputs.version }}
+        target_commitish: ${{ github.sha }}
+        name: ${{ steps.repo-dispatch.outputs.version }}
+        body: "This release ships cflinuxfs4-compat-release version ${{ steps.repo-dispatch.outputs.version }}, based on [cflinuxfs4](https://github.com/cloudfoundry/cflinuxfs4/releases/tag/${{ steps.repo-dispatch.outputs.version }}) with the addition of python, ruby, and related packages."
+        draft: false
+        assets: [{"path":"releases/cflinuxfs4-compat/cflinuxfs4-compat-${{ steps.repo-dispatch.outputs.version }}.tgz", "name": "cflinuxfs4-compat-${{ steps.repo-dispatch.outputs.version }}.tgz", "content_type":"application/gzip"}]
