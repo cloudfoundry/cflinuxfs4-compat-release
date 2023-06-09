@@ -88,6 +88,19 @@ jobs:
       with:
         branch: "main"
 
+    - name: Setup Release Assets
+      id: assets
+      run: |
+        assets="$(jq --null-input --compact-output \
+          '[
+            {
+              "path": "releases/cflinuxfs4-compat/cflinuxfs4-compat-${{ steps.repo-dispatch.outputs.version }}.tgz",
+              "name": "cflinuxfs4-compat-${{ steps.repo-dispatch.outputs.version }}.tgz",
+              "content_type": "application/gzip"
+            }]')"
+
+        printf "assets=%s\n" "${assets}" >> "$GITHUB_OUTPUT"
+
     - name: Create Release
       uses: paketo-buildpacks/github-config/actions/release/create@main
       with:
@@ -98,4 +111,4 @@ jobs:
         name: ${{ steps.repo-dispatch.outputs.version }}
         body: "This release ships cflinuxfs4-compat-release version ${{ steps.repo-dispatch.outputs.version }}, based on [cflinuxfs4](https://github.com/cloudfoundry/cflinuxfs4/releases/tag/${{ steps.repo-dispatch.outputs.version }}) with the addition of python, ruby, and related packages."
         draft: false
-        assets: [{"path":"releases/cflinuxfs4-compat/cflinuxfs4-compat-${{ steps.repo-dispatch.outputs.version }}.tgz", "name": "cflinuxfs4-compat-${{ steps.repo-dispatch.outputs.version }}.tgz", "content_type":"application/gzip"}]
+        assets: ${{ steps.assets.outputs.assets }}
