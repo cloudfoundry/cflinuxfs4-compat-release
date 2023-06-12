@@ -64,7 +64,7 @@ jobs:
 
     - name: Git commit blobs.yml
       id: commit-1
-      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@pathspec-fix
+      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
       with:
         message: "Updating blobs for cflinuxfs4-compat bosh release version ${{ steps.repo-dispatch.outputs.version }}"
         pathspec: "config/blobs.yml"
@@ -72,6 +72,13 @@ jobs:
         committer_email: ${{ secrets.CF_BOT_EMAIL }}
         keyid: ${{ secrets.CF_BOT_GPG_SIGNING_KEY_ID }}
         key: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
+
+    - name: Git add release files
+      # manually git add files since there is a bug with multiple-file pathspec in the create-commit action
+      id: git-add
+      run: |
+        git add .final_builds releases/**/*-${{ steps.repo-dispatch.outputs.version }}.yml releases/**/index.yml
+        git status
 
     - name: Git commit
       id: commit-2
