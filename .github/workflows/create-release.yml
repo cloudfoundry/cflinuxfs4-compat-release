@@ -64,7 +64,7 @@ jobs:
 
     - name: Git commit blobs.yml
       id: commit-1
-      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
+      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@pathspec-fix
       with:
         message: "Updating blobs for cflinuxfs4-compat bosh release version ${{ steps.repo-dispatch.outputs.version }}"
         pathspec: "config/blobs.yml"
@@ -75,7 +75,7 @@ jobs:
 
     - name: Git commit
       id: commit-2
-      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@main
+      uses: paketo-buildpacks/github-config/actions/pull-request/create-commit@pathspec-fix
       with:
         message: "Final cflinuxfs4-compat bosh release version ${{ steps.repo-dispatch.outputs.version }}, containing cflinuxfs-compat version ${{ steps.repo-dispatch.outputs.version }}"
         pathspec: .final_builds releases/**/*-${{ steps.repo-dispatch.outputs.version }}.yml releases/**/index.yml
