@@ -44,16 +44,16 @@ jobs:
         DOCKERHUB_USERNAME: ${{ secrets.CF_DOCKERHUB_USERNAME }}
         DOCKERHUB_PASSWORD: ${{ secrets.CF_DOCKERHUB_PASSWORD }}
       run: |
-        pushd $GITHUB_WORKSPACE/cflinuxfs4
+        pushd cflinuxfs4
           echo "${DOCKERHUB_PASSWORD}" | sudo skopeo login --username "${DOCKERHUB_USERNAME}" --password-stdin index.docker.io
           echo "Making compat stack"
           make compat version=${{ steps.repo-dispatch.outputs.version }}
         popd
 
-    - name: BOSH release creation
-      id: bosh-release
+    - name: BOSH blob add and upload
+      id: bosh-blobs
       # TODO change this to main
-      uses: cloudfoundry/buildpacks-github-config/actions/stack/create-release@bosh-release
+      uses: cloudfoundry/buildpacks-github-config/actions/stack/add-upload-blobs@bosh-release
       with:
         version: ${{ steps.repo-dispatch.outputs.version }}
         access-key-id: ${{ secrets.CF_S3_ACCESS_KEY }}
@@ -61,6 +61,10 @@ jobs:
         release-name: cflinuxfs4-compat
         blob-glob: cflinuxfs4/cflinuxfs4-*.tar.gz
         blob-name: rootfs
+
+    - name: Clean up cflinuxfs4 repository
+      # clear up cflinuxfs4 directory before we run bosh create-release so working directory is clean
+      run: rm -rf cflinuxfs4
 
     - name: Git commit blobs.yml
       id: commit-1
@@ -72,6 +76,14 @@ jobs:
         committer_email: ${{ secrets.CF_BOT_EMAIL }}
         keyid: ${{ secrets.CF_BOT_GPG_SIGNING_KEY_ID }}
         key: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
+
+    - name: BOSH release creation
+      id: bosh-release
+      # TODO change this to main
+      uses: cloudfoundry/buildpacks-github-config/actions/stack/create-release@bosh-release
+      with:
+        version: ${{ steps.repo-dispatch.outputs.version }}
+        release-name: cflinuxfs4-compat
 
     - name: Git add release files
       # manually git add files since there is a bug with multiple-file pathspec in the create-commit action
