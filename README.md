@@ -42,5 +42,5 @@ properties:
 
 1. Target your bosh director
 
-1. Run `bosh -n deploy -d rootfs-smoke-test manifests/manifest.yml && bosh run-errand -d rootfs-smoke-test cflinuxfs4-compat-smoke-test`
+1. Run `bosh -n deploy -d rootfs-smoke-test manifests/manifest.yml && bosh run-errand -d rootfs-smoke-test cflinuxfs4-smoke-test`
 
