@@ -34,8 +34,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: cloudfoundry/cflinuxfs4
-        # TODO - set this to main
-        ref: c4126e9cc86d660c6444c3eb50149e3cfdc1eb8f
         path: cflinuxfs4
 
     - name: Create stack
