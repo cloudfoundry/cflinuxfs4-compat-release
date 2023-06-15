@@ -30,6 +30,18 @@ jobs:
         fi
         echo "version=${version}" >> "$GITHUB_OUTPUT"
 
+    - name: Wait for rootfs docker image
+      run: |
+        until eval "$(
+          skopeo list-tags docker://cloudfoundry/cflinuxfs4 \
+            | jq -r \
+            --arg VERSION "${{ steps.repo-dispatch.outputs.version }}" \
+            '.Tags| any(. == $VERSION)')" ; do
+          echo "Waiting 30s for docker://cloudfoundry/cflinuxfs4:${{ steps.repo-dispatch.outputs.version }} to be available"
+          sleep 30
+        done
+        echo "image docker://cloudfoundry/cflinuxfs4:${{ steps.repo-dispatch.outputs.version }} is available"
+
     - name: Checkout cflinuxfs4
       uses: actions/checkout@v3
       with:
