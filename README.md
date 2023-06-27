@@ -3,7 +3,7 @@
 This repository is a [BOSH](https://github.com/cloudfoundry/bosh) release for
 deploying the cflinuxfs4 rootfs (with the addition of ruby, python, and associated packages)
 package as well as a job that will extract the package to
-`/var/vcap/packages/cflinuxfs4-compat/rootfs`.
+`/var/vcap/packages/cflinuxfs4/rootfs`.
 
 #### Trusted certificates
 
