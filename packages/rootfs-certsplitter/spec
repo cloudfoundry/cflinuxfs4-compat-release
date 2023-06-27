@@ -2,7 +2,7 @@
 name: rootfs-certsplitter-cflinuxfs4
 
 dependencies:
-  - golang-1.18-linux
+  - golang-1.20-linux
 
 files:
   - code.cloudfoundry.org/certsplitter/**/*
