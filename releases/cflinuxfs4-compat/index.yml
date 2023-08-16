@@ -1,6 +1,8 @@
 builds:
   02d0b076-2431-4e8c-6866-e08e2a00eac3:
     version: 1.20.0
+  164fd13b-d592-4932-434c-0c9d1f84c820:
+    version: 1.30.0
   2e12c9cc-d7ff-486c-5a52-2bdc2caea855:
     version: 1.13.0
   3ac68d80-cbfd-4d1b-74f3-af703bdd2268:
