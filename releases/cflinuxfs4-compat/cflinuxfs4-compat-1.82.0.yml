@@ -1,0 +1,38 @@
+name: cflinuxfs4-compat
+version: 1.82.0
+commit_hash: "876e196"
+uncommitted_changes: false
+jobs:
+- name: cflinuxfs4-rootfs-setup
+  version: 5d36c1b2716b936299d7ae2f18f9a9548da78130a17cb71a5d9c06243e5786f5
+  fingerprint: 5d36c1b2716b936299d7ae2f18f9a9548da78130a17cb71a5d9c06243e5786f5
+  sha1: sha256:bca625d7fd47e18b6df8bd5ed85d4d95bebc63a4bdc4c663ff8522bdc02a082a
+  packages:
+  - cflinuxfs4
+  - rootfs-certsplitter-cflinuxfs4
+- name: cflinuxfs4-smoke-test
+  version: 8008db8e632ed775a248f5cf7befbc8b546531a81a770387032f51aff2905208
+  fingerprint: 8008db8e632ed775a248f5cf7befbc8b546531a81a770387032f51aff2905208
+  sha1: sha256:84db1ff695ccce30092598dd520a79a2de1026a92366661c4d9987ce6eae5bbd
+  packages: []
+packages:
+- name: cflinuxfs4
+  version: 7b6fc76c2ac93735c6169ffa7b240417d2c3cea2c359c1891e3543c4f30eef1d
+  fingerprint: 7b6fc76c2ac93735c6169ffa7b240417d2c3cea2c359c1891e3543c4f30eef1d
+  sha1: sha256:93a784130ec1d2cb65e08e17b39269367a39039e095cb112376d0d74d456613b
+  dependencies: []
+- name: golang-1.20-linux
+  version: 8c04109541f4d504f5be559da433998bd459b0f45cd3654557cc3642cc4d2f60
+  fingerprint: 8c04109541f4d504f5be559da433998bd459b0f45cd3654557cc3642cc4d2f60
+  sha1: sha256:e63c48db656567b2697e8f87e61f79a8be65ac907aceae1bf7c482a1588f9b60
+  dependencies: []
+- name: rootfs-certsplitter-cflinuxfs4
+  version: bd7edd1e1a162532e91f3184331b0918ac5beaa3b7470acc4db881ff9cb1feb5
+  fingerprint: bd7edd1e1a162532e91f3184331b0918ac5beaa3b7470acc4db881ff9cb1feb5
+  sha1: sha256:544e796c2e3e41ab85f4b9bab94687a38583ac7d29f39a73a8b08f82f9ad8c8d
+  dependencies:
+  - golang-1.20-linux
+license:
+  version: 8c6e139af58a7e851485429f8cef0b12c536285da0ccbcb95b14ff1103734d0d
+  fingerprint: 8c6e139af58a7e851485429f8cef0b12c536285da0ccbcb95b14ff1103734d0d
+  sha1: sha256:154e9cff4694e96bd37cc11c9bc61b6b558b3f25256f4bbfca5ce4131cb63853
