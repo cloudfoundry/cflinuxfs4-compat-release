@@ -1,4 +1,4 @@
-rootfs/cflinuxfs4-compat-1.141.0.tar.gz:
-  size: 472670030
-  object_id: ee2b008f-62ad-40a8-4859-f5ff6005619a
-  sha: sha256:cb16e2c833c575b9ec52081f899c9c7f33e04bda53e7b22e99cf736c4e2f990b
+rootfs/cflinuxfs4-compat-1.142.0.tar.gz:
+  size: 472662203
+  object_id: 46e8831c-5512-4985-719d-3488414bee5b
+  sha: sha256:0ebbe3696e81409d767e5bf2248e401c26dedce569e1b9d11d599aac9f8ce179
