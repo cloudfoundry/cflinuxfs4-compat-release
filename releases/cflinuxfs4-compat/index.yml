@@ -5,6 +5,8 @@ builds:
     version: 1.134.0
   0848bb15-c878-4174-6531-ce701d3d98ed:
     version: 1.44.0
+  0b4a1f43-cfde-4d67-46f3-7bf8c684ac49:
+    version: 1.150.0
   0d27abde-6fd8-4617-4f57-70d32645e6fb:
     version: 1.46.0
   0d8a820c-b4a6-4500-5480-ee93aab082d9:
