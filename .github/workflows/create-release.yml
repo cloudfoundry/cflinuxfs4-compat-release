@@ -30,17 +30,21 @@ jobs:
         fi
         echo "version=${version}" >> "$GITHUB_OUTPUT"
 
-    - name: Wait for rootfs docker image
+    - name: Auth GitHub CLI
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      
+    - name: Wait for rootfs release
       run: |
-        until eval "$(
-          skopeo list-tags docker://cloudfoundry/cflinuxfs4 \
-            | jq -r \
-            --arg VERSION "${{ steps.repo-dispatch.outputs.version }}" \
-            '.Tags| any(. == $VERSION)')" ; do
-          echo "Waiting 30s for docker://cloudfoundry/cflinuxfs4:${{ steps.repo-dispatch.outputs.version }} to be available"
+        VERSION=${{ steps.repo-dispatch.outputs.version }}
+        REPO="cloudfoundry/cflinuxfs4"
+        ASSET="cflinuxfs4-${VERSION}.tar.gz"
+        until gh release view "v${VERSION}" --repo "$REPO" --json assets \
+            -q '.assets // [] | map(.name) | index("'"$ASSET"'") != null' \
+            | grep -q true; do
+          echo "Waiting for asset $ASSET in release v${VERSION}..."
           sleep 30
         done
-        echo "image docker://cloudfoundry/cflinuxfs4:${{ steps.repo-dispatch.outputs.version }} is available"
+        echo "Asset $ASSET is available"
 
     - name: Checkout cflinuxfs4
       uses: actions/checkout@v3
