@@ -38,10 +38,10 @@ jobs:
         VERSION=${{ steps.repo-dispatch.outputs.version }}
         REPO="cloudfoundry/cflinuxfs4"
         ASSET="cflinuxfs4-${VERSION}.tar.gz"
-        until gh release view "v${VERSION}" --repo "$REPO" --json assets \
+        until gh release view "${VERSION}" --repo "$REPO" --json assets \
             -q '.assets // [] | map(.name) | index("'"$ASSET"'") != null' \
             | grep -q true; do
-          echo "Waiting for asset $ASSET in release v${VERSION}..."
+          echo "Waiting for asset $ASSET in release ${VERSION}..."
           sleep 30
         done
         echo "Asset $ASSET is available"
