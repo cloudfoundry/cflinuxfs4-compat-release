@@ -137,6 +137,7 @@ jobs:
       uses: paketo-buildpacks/github-config/actions/pull-request/push-branch@main
       with:
         branch: "main"
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Release Assets
       id: assets
