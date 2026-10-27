@@ -114,6 +114,8 @@ jobs:
         KEY: ${{ secrets.CF_BOT_GPG_SIGNING_KEY }}
       run: |
         set -euo pipefail
+        # previous docker-based steps run as root and leave root-owned files in the workspace
+        sudo chown -R "$(id -u):$(id -g)" "${GITHUB_WORKSPACE}"
         git config user.name "cf-buildpacks-eng"
         git config user.email "${COMMITTER_EMAIL}"
         if [ -n "${KEYID}" ] && [ -n "${KEY}" ]; then
